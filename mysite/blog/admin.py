@@ -11,4 +11,3 @@ class BlogTypeAdmin(admin.ModelAdmin):
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'blog_type', 'author', 'created_time',
                     'last_updated_time')
-
