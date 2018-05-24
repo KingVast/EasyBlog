@@ -16,10 +16,15 @@ div.blog p.blog-info{
     margin-bottom: 0;
 }
 
+div.paginator{
+    text-align: center;
+}
+
 ul.blog-info-decsription{
     list-style-type: none;
     margin-bottom: 1em;
 }
+
 ul.blog-info-decsription li{
     display: inline-block;
     margin-right: 2em;
