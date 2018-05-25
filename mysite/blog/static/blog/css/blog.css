@@ -33,3 +33,7 @@ ul.blog-info-decsription li{
 div.blog-content{
     text-indent: 2em;
 }
+
+div.blog-more{
+    margin-top: 1em;
+}
