@@ -14,7 +14,7 @@ class ReadNum(models.Model):
 
 
 class ReadNumExpandMethod():
-    def get_read_num(self):       
+    def get_read_num(self):
         try:
             ct = ContentType.objects.get_for_model(self)
             readnum = ReadNum.objects.get(content_type=ct, object_id=self.pk)
