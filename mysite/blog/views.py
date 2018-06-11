@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.db.models import Count
@@ -76,6 +76,6 @@ def blog_detail(request, blog_pk):
     context['next_blog'] = Blog.objects.filter(
         created_time__lt=blog.created_time).first()
     context['blog'] = blog
-    response = render_to_response('blog/blog_detail.html', context)
+    response = render(request, 'blog/blog_detail.html', context)
     response.set_cookie(read_cookie_key, 'true')
     return response
