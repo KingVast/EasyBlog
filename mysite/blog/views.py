@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.db.models import Count
@@ -46,7 +46,7 @@ def get_blog_list_common_date(request, blogs_all_list):
 def blog_list(request):
     blogs_all_list = Blog.objects.all()
     context = get_blog_list_common_date(request, blogs_all_list)
-    return render_to_response('blog/blog_list.html', context)
+    return render(request, 'blog/blog_list.html', context)
 
 
 def blogs_with_type(request, blog_type_pk):
@@ -54,7 +54,7 @@ def blogs_with_type(request, blog_type_pk):
     blogs_all_list = Blog.objects.filter(blog_type=blog_type)
     context = get_blog_list_common_date(request, blogs_all_list)
     context['blog_type'] = blog_type
-    return render_to_response('blog/blogs_with_type.html', context)
+    return render(request, 'blog/blogs_with_type.html', context)
 
 
 def blogs_with_date(request, year, month):
@@ -62,7 +62,7 @@ def blogs_with_date(request, year, month):
         created_time__year=year, created_time__month=month)
     context = get_blog_list_common_date(request, blogs_all_list)
     context['blogs_with_date'] = '%s年%s月' % (year, month)
-    return render_to_response('blog/blogs_with_date.html', context)
+    return render(request, 'blog/blogs_with_date.html', context)
 
 
 def blog_detail(request, blog_pk):
