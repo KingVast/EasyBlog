@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from .models import Blog, BlogType
 from read_statistics.utils import read_statistics_once_read
 from comment.models import Comment
+from comment.forms import CommentForm
 
 
 def get_blog_list_common_date(request, blogs_all_list):
@@ -71,7 +72,8 @@ def blog_detail(request, blog_pk):
     blog = get_object_or_404(Blog, pk=blog_pk)
     read_cookie_key = read_statistics_once_read(request, blog)
     blog_content_type = ContentType.objects.get_for_model(blog)
-    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk)
+    comments = Comment.objects.filter(
+        content_type=blog_content_type, object_id=blog.pk)
 
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
@@ -81,6 +83,11 @@ def blog_detail(request, blog_pk):
         created_time__lt=blog.created_time).first()
     context['blog'] = blog
     context['comments'] = comments
+    context['comment_form'] = CommentForm(
+        initial={
+            'content_type': blog_content_type.model,
+            'object_id': blog_pk
+        })
     response = render(request, 'blog/blog_detail.html', context)
     response.set_cookie(read_cookie_key, 'true')
     return response

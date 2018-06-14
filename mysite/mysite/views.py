@@ -8,7 +8,8 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from read_statistics.utils import get_seven_days_read_data, get_today_hot_data, get_yesterday_hot_data
+from read_statistics.utils import get_seven_days_read_data, \
+    get_today_hot_data, get_yesterday_hot_data
 from blog.models import Blog
 from .forms import LoginForm, RegForm
 
