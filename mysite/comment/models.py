@@ -15,3 +15,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-comment_time']
+
+
+class Reply(models.Model):
+    pass
