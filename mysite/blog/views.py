@@ -16,8 +16,8 @@ def get_blog_list_common_date(request, blogs_all_list):
     current_page_num = page_of_blogs.number
     page_range = list(range(max(
         current_page_num - 2, 1), current_page_num)) + list(
-            range(current_page_num,
-                  min(current_page_num + 2, paginator.num_pages) + 1))
+        range(current_page_num,
+              min(current_page_num + 2, paginator.num_pages) + 1))
 
     if page_range[0] - 1 >= 2:
         page_range.insert(0, '...')
@@ -73,7 +73,7 @@ def blog_detail(request, blog_pk):
     read_cookie_key = read_statistics_once_read(request, blog)
     blog_content_type = ContentType.objects.get_for_model(blog)
     comments = Comment.objects.filter(
-        content_type=blog_content_type, object_id=blog.pk)
+        content_type=blog_content_type, object_id=blog.pk, parent=None)
 
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
@@ -82,11 +82,12 @@ def blog_detail(request, blog_pk):
     context['next_blog'] = Blog.objects.filter(
         created_time__lt=blog.created_time).first()
     context['blog'] = blog
-    context['comments'] = comments
+    context['comments'] = comments.order_by('-comment_time')
     context['comment_form'] = CommentForm(
         initial={
             'content_type': blog_content_type.model,
-            'object_id': blog_pk
+            'object_id': blog_pk,
+            'reply_comment_id': 0
         })
     response = render(request, 'blog/blog_detail.html', context)
     response.set_cookie(read_cookie_key, 'true')
