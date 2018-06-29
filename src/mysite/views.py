@@ -7,6 +7,7 @@ from django.core.cache import cache
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.http import JsonResponse
 
 from read_statistics.utils import get_seven_days_read_data, \
     get_today_hot_data, get_yesterday_hot_data
@@ -56,6 +57,19 @@ def login(request):
     context = {}
     context['login_form'] = login_form
     return render(request, 'login.html', context)
+
+
+def login_for_modal(request):
+    login_form = LoginForm(request.POST)
+    if login_form.is_valid():
+        user = login_form.cleaned_data['user']
+        auth.login(request, user)
+        data = {}
+        data['status'] = 'SUCCESS'
+    else:
+        data = {}
+        data['status'] = 'ERROR'
+    return JsonResponse(data)
 
 
 def register(request):
