@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db.models import Count
 from .models import Blog, BlogType
 from read_statistics.utils import read_statistics_once_read
-from user.forms import LoginForm
 
 
 def get_blog_list_common_date(request, blogs_all_list):
@@ -76,7 +75,6 @@ def blog_detail(request, blog_pk):
     context['next_blog'] = Blog.objects.filter(
         created_time__lt=blog.created_time).first()
     context['blog'] = blog
-    context['login_form'] = LoginForm()
     response = render(request, 'blog/blog_detail.html', context)
     response.set_cookie(read_cookie_key, 'true')
     return response
