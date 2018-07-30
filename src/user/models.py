@@ -9,3 +9,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return '<Profile: %s for %s>' % (self.nickname, self.user.username)
+
+
+def get_nickname(self):
+    if Profile.objects.filter(user=self).exists():
+        profile = Profile.objects.get(user=self)
+        return profile.nickname
+    else:
+        return ''
+
+
+User.get_nickname = get_nickname

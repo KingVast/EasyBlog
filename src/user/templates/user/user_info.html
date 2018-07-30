@@ -15,7 +15,7 @@
                     <ul>
                         <li>
                             昵称：
-                            {{ user.profile.nickname }}
+                            {{ user.get_nickname }}
                             <a href="{% url 'change_nickname' %}?from={{ request.get_full_path }}">修改昵称</a>
                         </li>
                         <li>
