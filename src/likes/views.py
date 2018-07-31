@@ -46,11 +46,11 @@ def like_change(request):
         else:
             return ErrorResponse(402, 'you were liked')
     else:
-        if LikeRecord.objects.filter(content_type=content_type,
-                                     object_id=object_id, user=user).exists():
-            like_record = LikeRecord.objects.filter(content_type=content_type,
-                                                    object_id=object_id,
-                                                    user=user)
+        if LikeRecord.objects.filter(
+                content_type=content_type, object_id=object_id,
+                user=user).exists():
+            like_record = LikeRecord.objects.filter(
+                content_type=content_type, object_id=object_id, user=user)
             like_record.delete()
             like_count, created = LikeCount.objects.get_or_create(
                 content_type=content_type, object_id=object_id)

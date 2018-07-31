@@ -13,8 +13,8 @@ def get_blog_list_common_date(request, blogs_all_list):
     current_page_num = page_of_blogs.number
     page_range = list(range(max(
         current_page_num - 2, 1), current_page_num)) + list(
-        range(current_page_num,
-              min(current_page_num + 2, paginator.num_pages) + 1))
+            range(current_page_num,
+                  min(current_page_num + 2, paginator.num_pages) + 1))
 
     if page_range[0] - 1 >= 2:
         page_range.insert(0, '...')
