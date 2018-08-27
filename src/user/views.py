@@ -1,9 +1,12 @@
+import string
+import random
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import JsonResponse
-from .forms import LoginForm, RegForm, ChangeNicknameForm
+from django.core.mail import send_mail
+from .forms import LoginForm, RegForm, ChangeNicknameForm, BindEmailForm
 from .models import Profile
 
 
@@ -87,3 +90,45 @@ def change_nickname(request):
     context['return_back_url'] = redirect_to
     context['form'] = form
     return render(request, 'form.html', context)
+
+
+def bind_email(request):
+    redirect_to = request.GET.get('from', reverse('home'))
+
+    if request.method == 'POST':
+        form = BindEmailForm(request.POST, user=request.user)
+        if form.is_valid():
+            pass
+            return redirect(redirect_to)
+    else:
+        form = BindEmailForm()
+
+    context = {}
+    context['page_title'] = '绑定邮箱'
+    context['form_title'] = '绑定昵称'
+    context['submit_text'] = '绑定'
+    context['return_back_url'] = redirect_to
+    context['form'] = form
+    return render(request, 'user/bind_email.html', context)
+
+
+def send_verification_code(request):
+    email = request.GET.get('email', '')
+    data = {}
+
+    if email != '':
+        code = ''.join(random.sample(string.ascii_letters + string.digits, 4))
+        request.session['bind_email_code'] = code
+
+        send_mail(
+            '绑定邮箱',
+            '验证码：%s' % code,
+            'charon.wh@qq.com',
+            [email],
+            fail_silently=False,
+        )
+        data['status'] = 'SUCCESS'
+    else:
+        data['status'] = 'ERROR'
+    return JsonResponse(data)
+

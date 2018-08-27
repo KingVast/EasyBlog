@@ -106,3 +106,24 @@ class ChangeNicknameForm(forms.Form):
         if nickname_new == '':
             raise forms.ValidationError('新的昵称不能为空')
         return nickname_new
+
+
+class BindEmailForm(forms.Form):
+    email = forms.EmailField(
+        label='邮箱',
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '请输入正确的邮箱'
+            }
+        )
+    )
+    verification_code = forms.CharField(
+        label='验证码',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '点击"发送验证码"发送到邮箱'
+            }
+        )
+    )
