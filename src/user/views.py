@@ -1,5 +1,6 @@
 import string
 import random
+import time
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -96,9 +97,11 @@ def bind_email(request):
     redirect_to = request.GET.get('from', reverse('home'))
 
     if request.method == 'POST':
-        form = BindEmailForm(request.POST, user=request.user)
+        form = BindEmailForm(request.POST, request=request)
         if form.is_valid():
-            pass
+            email = form.cleaned_data['email']
+            request.user.email = email
+            request.user.save()
             return redirect(redirect_to)
     else:
         form = BindEmailForm()
@@ -119,16 +122,22 @@ def send_verification_code(request):
     if email != '':
         code = ''.join(random.sample(string.ascii_letters + string.digits, 4))
         request.session['bind_email_code'] = code
+        now = int(time.time())
+        send_code_time = request.session.get('send_code_time', 0)
+        if now - send_code_time < 30:
+            data['status'] = 'ERROR'
+        else:
+            request.session['bind_email_code'] = code
+            request.session['send_code_time'] = now
 
-        send_mail(
-            '绑定邮箱',
-            '验证码：%s' % code,
-            'charon.wh@qq.com',
-            [email],
-            fail_silently=False,
-        )
-        data['status'] = 'SUCCESS'
+            send_mail(
+                '绑定邮箱',
+                '验证码：%s' % code,
+                'charon.wh@qq.com',
+                [email],
+                fail_silently=False,
+            )
+            data['status'] = 'SUCCESS'
     else:
         data['status'] = 'ERROR'
     return JsonResponse(data)
-
