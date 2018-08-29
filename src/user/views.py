@@ -49,6 +49,8 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
 
+            del request.session['register_code']
+
             user = auth.authenticate(username=username, password=password)
             auth.login(request, user)
             return redirect(request.GET.get('form', reverse('home')))
@@ -102,6 +104,9 @@ def bind_email(request):
             email = form.cleaned_data['email']
             request.user.email = email
             request.user.save()
+
+            del request.session['bind_email_code']
+
             return redirect(redirect_to)
     else:
         form = BindEmailForm()

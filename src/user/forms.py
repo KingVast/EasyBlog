@@ -77,7 +77,7 @@ class RegForm(forms.Form):
         verification_code = self.cleaned_data.get('verification_code', '')
         if not (code != '' and code == verification_code):
             raise forms.ValidationError('验证码不正确')
-        
+
         return self.cleaned_data
 
     def clean_username(self):
