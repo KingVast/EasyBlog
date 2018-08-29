@@ -45,6 +45,13 @@ class RegForm(forms.Form):
             'class': 'form-control',
             'placeholder': '请输入邮箱'
         }))
+    verification_code = forms.CharField(
+        label='验证码',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '点击"发送验证码"发送到邮箱'
+        }))
     password = forms.CharField(
         label='密码',
         min_length=6,
@@ -59,6 +66,19 @@ class RegForm(forms.Form):
             'class': 'form-control',
             'placeholder': '再输入一次密码'
         }))
+
+    def __init__(self, *args, **kwargs):
+        if 'request' in kwargs:
+            self.request = kwargs.pop('request')
+        super(RegForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        code = self.request.session.get('register_code', '')
+        verification_code = self.cleaned_data.get('verification_code', '')
+        if not (code != '' and code == verification_code):
+            raise forms.ValidationError('验证码不正确')
+        
+        return self.cleaned_data
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -78,6 +98,13 @@ class RegForm(forms.Form):
         if password != password_again:
             raise forms.ValidationError('两次输入的密码不一致')
         return password_again
+
+    def clean_verification_code(self):
+        verification_code = self.cleaned_data.get('verification_code',
+                                                  '').strip()
+        if verification_code == '':
+            raise forms.ValidationError('验证码不能为空')
+        return verification_code
 
 
 class ChangeNicknameForm(forms.Form):

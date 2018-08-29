@@ -41,7 +41,7 @@ def login(request):
 
 def register(request):
     if request.method == "POST":
-        reg_form = RegForm(request.POST)
+        reg_form = RegForm(request.POST, request=request)
         if reg_form.is_valid():
             username = reg_form.cleaned_data['username']
             email = reg_form.cleaned_data['email']
@@ -117,17 +117,17 @@ def bind_email(request):
 
 def send_verification_code(request):
     email = request.GET.get('email', '')
+    send_for = request.GET.get('send_for', '')
     data = {}
 
     if email != '':
         code = ''.join(random.sample(string.ascii_letters + string.digits, 4))
-        request.session['bind_email_code'] = code
         now = int(time.time())
         send_code_time = request.session.get('send_code_time', 0)
         if now - send_code_time < 30:
             data['status'] = 'ERROR'
         else:
-            request.session['bind_email_code'] = code
+            request.session[send_for] = code
             request.session['send_code_time'] = now
 
             send_mail(
