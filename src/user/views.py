@@ -146,3 +146,7 @@ def send_verification_code(request):
     else:
         data['status'] = 'ERROR'
     return JsonResponse(data)
+
+
+def change_password(request):
+    pass
