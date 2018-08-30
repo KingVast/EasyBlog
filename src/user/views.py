@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import JsonResponse
 from django.core.mail import send_mail
-from .forms import LoginForm, RegForm, ChangeNicknameForm, BindEmailForm
+from .forms import LoginForm, RegForm, ChangeNicknameForm, BindEmailForm,\
+    ChangePasswordForm
 from .models import Profile
 
 
@@ -149,4 +150,25 @@ def send_verification_code(request):
 
 
 def change_password(request):
-    pass
+    redirect_to = request.GET.get('from', reverse('home'))
+
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            old_password = form.cleaned_data['old_password']
+            new_password = form.cleaned_data['new_password']
+            user.set_password(new_password)
+            user.save()
+            auth.logout(request)
+            return redirect(redirect_to)
+    else:
+        form = ChangePasswordForm()
+
+    context = {}
+    context['page_title'] = '修改密码'
+    context['form_title'] = '修改密码'
+    context['submit_text'] = '修改'
+    context['return_back_url'] = redirect_to
+    context['form'] = form
+    return render(request, 'form.html', context)

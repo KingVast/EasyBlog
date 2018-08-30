@@ -32,7 +32,7 @@
                             {{ user.last_login|date:"Y-m-d H:i:s" }}
                         </li>
                         <li>
-                            <a href="#">修改密码</a>
+                            <a href="{% url 'change_password' %}">修改密码</a>
                         </li>
                     </ul>
                 {% else %}
