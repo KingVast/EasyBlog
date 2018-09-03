@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from .forms import LoginForm, RegForm, ChangeNicknameForm, BindEmailForm,\
-    ChangePasswordForm
+    ChangePasswordForm, ForgotPasswordForm
 from .models import Profile
 
 
@@ -172,3 +172,30 @@ def change_password(request):
     context['return_back_url'] = redirect_to
     context['form'] = form
     return render(request, 'form.html', context)
+
+
+def forgot_password(request):
+    redirect_to = reverse('home')
+
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST, request=request)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            new_password = form.cleaned_data['new_password']
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+
+            del request.session['forgot_password_code']
+
+            return redirect(redirect_to)
+    else:
+        form = ForgotPasswordForm()
+
+    context = {}
+    context['page_title'] = '重置密码'
+    context['form_title'] = '重置密码'
+    context['submit_text'] = '重置'
+    context['return_back_url'] = redirect_to
+    context['form'] = form
+    return render(request, 'user/forgot_password.html', context)
