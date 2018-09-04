@@ -176,6 +176,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'charon.wh@qq.com'
-EMAIL_HOST_PASSWORD = 'sdyeyhszalolgedi'
+EMAIL_HOST_PASSWORD = 'bviohpxvrcsofjda'
 EMAIL_SUBJECT_PREFIX = '[Kingvast Blog]'
 EMAIL_USE_TLS = False
